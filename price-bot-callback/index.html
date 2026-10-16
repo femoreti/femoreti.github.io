@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <title>Price Bot — Autorização</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, sans-serif;
+      }
+      body {
+        max-width: 42rem;
+        margin: 4rem auto;
+        padding: 0 1.5rem;
+        line-height: 1.5;
+      }
+      code {
+        display: block;
+        overflow-wrap: anywhere;
+        padding: 1rem;
+        border: 1px solid #8886;
+        border-radius: 0.5rem;
+      }
+      button {
+        padding: 0.65rem 1rem;
+        cursor: pointer;
+      }
+      .error {
+        color: #c62828;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Autorização do Price Bot</h1>
+      <p id="status">Verificando o retorno do Mercado Livre…</p>
+      <section id="success" hidden>
+        <p>Autorização recebida. Copie o código e volte ao terminal.</p>
+        <code id="authorization-code"></code>
+        <p><button id="copy-code" type="button">Copiar código</button></p>
+      </section>
+      <p id="error" class="error" hidden></p>
+    </main>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      const error = params.get("error");
+      const status = document.querySelector("#status");
+      const success = document.querySelector("#success");
+      const errorOutput = document.querySelector("#error");
+
+      if (code) {
+        status.hidden = true;
+        success.hidden = false;
+        document.querySelector("#authorization-code").textContent = code;
+        document.querySelector("#copy-code").addEventListener("click", async () => {
+          await navigator.clipboard.writeText(code);
+        });
+      } else {
+        status.hidden = true;
+        errorOutput.hidden = false;
+        errorOutput.textContent = error
+          ? `O Mercado Livre retornou o erro: ${error}`
+          : "Nenhum código de autorização foi recebido.";
+      }
+    </script>
+  </body>
+</html>
