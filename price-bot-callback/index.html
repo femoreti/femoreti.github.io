@@ -38,26 +38,28 @@
       <h1>Autorização do Price Bot</h1>
       <p id="status">Verificando o retorno do Mercado Livre…</p>
       <section id="success" hidden>
-        <p>Autorização recebida. Copie o código e volte ao terminal.</p>
+        <p>Autorização recebida. Copie os dados e volte ao terminal.</p>
         <code id="authorization-code"></code>
-        <p><button id="copy-code" type="button">Copiar código</button></p>
+        <p><button id="copy-code" type="button">Copiar dados de autorização</button></p>
       </section>
       <p id="error" class="error" hidden></p>
     </main>
     <script>
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
+      const state = params.get("state");
       const error = params.get("error");
       const status = document.querySelector("#status");
       const success = document.querySelector("#success");
       const errorOutput = document.querySelector("#error");
 
-      if (code) {
+      if (code && state) {
+        const authorizationData = JSON.stringify({ code, state });
         status.hidden = true;
         success.hidden = false;
-        document.querySelector("#authorization-code").textContent = code;
+        document.querySelector("#authorization-code").textContent = authorizationData;
         document.querySelector("#copy-code").addEventListener("click", async () => {
-          await navigator.clipboard.writeText(code);
+          await navigator.clipboard.writeText(authorizationData);
         });
       } else {
         status.hidden = true;
